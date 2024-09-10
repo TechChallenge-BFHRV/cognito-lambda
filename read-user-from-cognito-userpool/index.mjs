@@ -3,7 +3,7 @@ import { CognitoIdentityProviderClient, AdminGetUserCommand } from "@aws-sdk/cli
 export const handler = async (event) => {
   const client = new CognitoIdentityProviderClient();
   const input = {
-    UserPoolId: "us-east-1_75oZOWeEN",
+    UserPoolId: process.env.USER_POOL_ID,
     Username: event.username,
   };
   const command = new AdminGetUserCommand(input);

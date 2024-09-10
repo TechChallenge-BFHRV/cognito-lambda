@@ -81,3 +81,29 @@ resource "aws_lambda_function" "test_lambda" {
     }
   }
 }
+
+data "archive_file" "lambda" {
+  type        = "zip"
+  source_file = "read-user-from-cognito-userpool/index.mjs"
+  output_path = "index.js.zip"
+    
+}
+
+resource "aws_lambda_function" "read_user_from_userpool_lambda" {
+  # If the file is not in the current working directory you will need to include a
+  # path.module in the filename.
+  filename      = "index.js.zip"
+  function_name = "read-user-from-cognito-userpool"
+  role          = "arn:aws:iam::687277442149:role/LabRole"
+  handler       = "index.handler"
+
+  source_code_hash = data.archive_file.lambda.output_base64sha256
+
+  runtime = "nodejs18.x"
+
+  environment {
+    variables = {
+      USER_POOL_ID = aws_cognito_user_pool.pool.id
+    }
+  }
+}
