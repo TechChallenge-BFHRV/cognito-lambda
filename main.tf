@@ -63,7 +63,7 @@ data "archive_file" "lambda" {
     
 }
 
-resource "aws_lambda_function" "test_lambda" {
+resource "aws_lambda_function" "create-user-in-userpool-lambda" {
   # If the file is not in the current working directory you will need to include a
   # path.module in the filename.
   filename      = "1_index.js.zip"
@@ -107,3 +107,21 @@ resource "aws_lambda_function" "read_user_from_userpool_lambda" {
     }
   }
 }
+resource "aws_api_gateway_rest_api" "techchallenge-gateway-api" {
+  name = "techchallenge-api-gateway"
+}
+resource "aws_lambda_permission" "apigw" {
+    statement_id  = "AllowAPIGatewayInvoke"
+    action        = "lambda:InvokeFunction"
+    function_name = "${aws_lambda_function.read_user_from_userpool_lambda.arn}"
+    principal     = "apigateway.amazonaws.com"
+    source_arn = "${aws_api_gateway_rest_api.techchallenge-gateway-api.execution_arn}/*/*"
+  }
+
+  resource "aws_lambda_permission" "apigw2" {
+    statement_id  = "AllowAPIGatewayInvoke"
+    action        = "lambda:InvokeFunction"
+    function_name = "${aws_lambda_function.create-user-in-userpool-lambda.arn}"
+    principal     = "apigateway.amazonaws.com"
+    source_arn = "${aws_api_gateway_rest_api.techchallenge-gateway-api.execution_arn}/*/*"
+  }
