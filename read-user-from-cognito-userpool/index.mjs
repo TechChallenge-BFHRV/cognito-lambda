@@ -8,6 +8,24 @@ export const handler = async (event) => {
     Username: data.username,
   };
   const command = new AdminGetUserCommand(input);
-  const response = await client.send(command);
-  return response;
+  try {
+    const cognitoResponse = await client.send(command);
+    const response = {
+      statusCode: 200,
+      body: JSON.stringify(cognitoResponse)
+    };
+    return response;
+  }
+  catch (error) {
+    return {
+      statusCode: 401,
+      body: JSON.stringify({
+        errorMessage: error.message,
+        errorType: "UnauthorizedError"
+      }),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    };
+  }
 };
