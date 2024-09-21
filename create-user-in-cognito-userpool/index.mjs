@@ -4,7 +4,6 @@ export const handler = async (event) => {
   const data = JSON.parse(event.body);
   const client = new CognitoIdentityProviderClient();
   const input = {
-    
     UserPoolId: process.env.USER_POOL_ID,
     Username: data.email,
     UserAttributes: [
