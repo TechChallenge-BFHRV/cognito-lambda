@@ -89,12 +89,16 @@ data "archive_file" "lambda2" {
     
 }
 
+data "aws_iam_role" "lab-role" {
+  name = "LabRole"
+}
+
 resource "aws_lambda_function" "read_user_from_userpool_lambda" {
   # If the file is not in the current working directory you will need to include a
   # path.module in the filename.
   filename      = "2_index.js.zip"
   function_name = "read-user-from-cognito-userpool"
-  role          = "arn:aws:iam::687277442149:role/LabRole"
+  role          = data.aws_iam_role.lab-role.arn
   handler       = "index.handler"
 
   source_code_hash = data.archive_file.lambda2.output_base64sha256
