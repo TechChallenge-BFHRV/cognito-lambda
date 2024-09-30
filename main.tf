@@ -129,3 +129,11 @@ resource "aws_lambda_permission" "apigw" {
     principal     = "apigateway.amazonaws.com"
     source_arn = "${aws_api_gateway_rest_api.techchallenge-gateway-api.execution_arn}/*/*"
   }
+
+  resource "aws_s3_bucket" "example" {
+  bucket = "techchallenge-foodtotem-terraform-state"
+  tags = {
+    Name        = "My bucket"
+    Environment = "Dev"
+  }
+}
