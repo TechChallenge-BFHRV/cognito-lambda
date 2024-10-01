@@ -56,6 +56,10 @@ resource "aws_cognito_user_pool" "pool" {
     }
 }
 
+data "aws_iam_role" "lab-role" {
+  name = "LabRole"
+}
+
 data "archive_file" "lambda" {
   type        = "zip"
   source_file = "create-user-in-cognito-userpool/index.mjs"
@@ -68,7 +72,7 @@ resource "aws_lambda_function" "create-user-in-userpool-lambda" {
   # path.module in the filename.
   filename      = "1_index.js.zip"
   function_name = "create-user-in-cognito-userpool"
-  role          = "arn:aws:iam::687277442149:role/LabRole"
+  role          = data.aws_iam_role.lab-role.arn
   handler       = "index.handler"
 
   source_code_hash = data.archive_file.lambda.output_base64sha256
@@ -88,11 +92,6 @@ data "archive_file" "lambda2" {
   output_path = "2_index.js.zip"
     
 }
-
-data "aws_iam_role" "lab-role" {
-  name = "LabRole"
-}
-
 resource "aws_lambda_function" "read_user_from_userpool_lambda" {
   # If the file is not in the current working directory you will need to include a
   # path.module in the filename.
