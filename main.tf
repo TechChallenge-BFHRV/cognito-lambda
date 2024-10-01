@@ -131,6 +131,7 @@ resource "aws_lambda_permission" "apigw" {
 
   resource "aws_s3_bucket" "example" {
   bucket = "techchallenge-foodtotem-terraform-state"
+  force_destroy = true
   tags = {
     Name        = "My bucket"
     Environment = "Dev"
