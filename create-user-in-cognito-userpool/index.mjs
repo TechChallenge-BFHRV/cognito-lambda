@@ -23,7 +23,7 @@ export const handler = async (event) => {
       },
     ],
     TemporaryPassword: "STRING_VALUE",
-    ForceAliasCreation: true || false,
+    ForceAliasCreation: true,
     MessageAction: "SUPPRESS",
     DesiredDeliveryMediums: [
       "EMAIL",
